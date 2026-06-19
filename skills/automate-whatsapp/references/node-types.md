@@ -262,8 +262,6 @@ Default tools (toggle on/off only):
 
 Use `contact_conversations` when an agent should list and read older WhatsApp conversations for the same current contact. Call it with `action: "list"` first, then call `action: "read"` with a returned `conversation_id`.
 
-<!-- TODO: Confirm whether new workflows receive contact_conversations by default in all project types. -->
-
 Custom tools:
 - `flow_agent_webhooks[]` (webhook tools)
 - `flow_agent_mcp_servers[]` (MCP tools)
