@@ -1,13 +1,13 @@
 ---
 name: observe-whatsapp
-description: "Observe and troubleshoot WhatsApp in Kapso: search Logs V2 across API, Meta webhook, workflow, and webhook-delivery events; debug message delivery; inspect webhook retries; triage API errors; and run health checks. Use when investigating production issues, message failures, workflow behavior, or webhook delivery problems."
+description: "Observe and troubleshoot WhatsApp in Kapso: search Logs across API, Meta webhook, workflow, and webhook-delivery events; debug message delivery; inspect webhook retries; triage API errors; and run health checks. Use when investigating production issues, message failures, workflow behavior, or webhook delivery problems."
 ---
 
 # Observe WhatsApp
 
 ## When to use
 
-Use this skill for operational diagnostics: Logs V2 search, message delivery investigation, webhook delivery debugging, error triage, workflow event correlation, and WhatsApp health checks.
+Use this skill for operational diagnostics: Logs search, message delivery investigation, webhook delivery debugging, error triage, workflow event correlation, and WhatsApp health checks.
 
 ## Setup
 
@@ -24,7 +24,7 @@ Env vars:
 
 ### Search logs
 
-Use Logs V2 search first when the user gives an identifier, endpoint, message ID, workflow execution ID, webhook delivery ID, request ID, or a vague "what happened?" debugging prompt.
+Use Logs search first when the user gives an identifier, endpoint, message ID, workflow execution ID, webhook delivery ID, request ID, or a vague "what happened?" debugging prompt.
 
 Preferred path:
 1. Search the current project: `kapso logs search --query "<id-or-text>" --period 24h --source all --limit 20 --output json`
@@ -41,7 +41,7 @@ Fallback path:
 2. Use filters with repeated flags: `node scripts/log-search.js --source flow_event --filter flow_execution_id=<execution-id> --period 7d`
 3. Discover source and filter options: `node scripts/log-search.js --catalog true`
 
-Logs V2 sources are `external_api_log`, `whatsapp_webhook_event`, `flow_event`, and `webhook_delivery`. The Platform API fallback returns indexed Logs V2 event payloads for the API-key project and requires Logs V2/Elasticsearch to be enabled.
+Logs sources are `external_api_log`, `whatsapp_webhook_event`, `flow_event`, and `webhook_delivery`. The Platform API fallback returns indexed Logs payloads for the API-key project and requires Logs and Elasticsearch to be enabled.
 
 ### Investigate message delivery
 
@@ -66,7 +66,7 @@ Preferred path:
 4. Inspect related templates when relevant: `kapso whatsapp templates list --phone-number "<display-number>" --output json`
 
 Fallback path:
-1. Logs V2 search: `node scripts/log-search.js --problems-only true --period 24h --limit 20`
+1. Logs search: `node scripts/log-search.js --problems-only true --period 24h --limit 20`
 2. Message errors: `node scripts/errors.js`
 3. API logs: `node scripts/api-logs.js`
 4. Webhook deliveries: `node scripts/webhook-deliveries.js`
@@ -95,7 +95,7 @@ Fallback path:
 
 | Script | Purpose |
 |--------|---------|
-| `log-search.js` | Search Logs V2 events across API, Meta webhook, workflow, and webhook-delivery sources |
+| `log-search.js` | Search Logs across API, Meta webhook, workflow, and webhook-delivery sources |
 | `errors.js` | List message errors |
 | `api-logs.js` | List external API logs |
 | `webhook-deliveries.js` | List webhook delivery attempts |
@@ -129,7 +129,7 @@ node scripts/openapi-explore.mjs --spec platform schema WebhookDelivery
 
 - For webhook setup (create/update/delete, signature verification, event types), use `integrate-whatsapp`.
 - Prefer resolving a display phone number to the canonical `phone_number_id` before deep debugging.
-- Prefer Logs V2 search before older single-resource log endpoints when correlating across messages, workflows, API calls, and webhook deliveries.
+- Prefer Logs search before older single-resource log endpoints when correlating across messages, workflows, API calls, and webhook deliveries.
 - Keep the scripts as the fallback path when the CLI is unavailable or when you need API-log or webhook-delivery inspection.
 
 ## References

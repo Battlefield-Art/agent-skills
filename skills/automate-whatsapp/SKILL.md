@@ -1,6 +1,6 @@
 ---
 name: automate-whatsapp
-description: "Build WhatsApp automations with Kapso workflows: configure WhatsApp triggers, edit workflow graphs, manage executions, deploy functions, search workflow Logs V2 events, and debug automation behavior. Use when automating WhatsApp conversations and event handling."
+description: "Build WhatsApp automations with Kapso workflows: configure WhatsApp triggers, edit workflow graphs, manage executions, deploy functions, search workflow Logs, and debug automation behavior. Use when automating WhatsApp conversations and event handling."
 ---
 
 # Automate WhatsApp
@@ -258,7 +258,7 @@ node scripts/openapi-explore.mjs --spec workflows op getWorkflowVariables
 ## Notes
 
 - Prefer file paths over inline JSON (`--definition-file`, `--code-file`)
-- Use `observe-whatsapp` for cross-source Logs V2 search when debugging a workflow alongside API calls, Meta events, or webhook deliveries.
+- Use `observe-whatsapp` for cross-source Logs search when debugging a workflow alongside API calls, Meta events, or webhook deliveries.
 - Variable CRUD (`variables-set.js`, `variables-delete.js`) is blocked - Platform API doesn't support it
 
 ## References
