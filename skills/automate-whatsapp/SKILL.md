@@ -7,7 +7,7 @@ description: "Build WhatsApp automations with Kapso workflows: configure WhatsAp
 
 ## When to use
 
-Use this skill to build and run WhatsApp automations: workflow CRUD, graph edits, triggers, executions, function management, webhook tools, and MCP tools.
+Use this skill to build and run WhatsApp automations: workflow CRUD, graph edits, WhatsApp and Project Event triggers, Project Event emissions, executions, function management, webhook tools, and MCP tools.
 
 ## Setup
 
@@ -106,6 +106,45 @@ If you get a lock_version conflict: re-fetch, re-apply changes, retry with new l
 4. Delete: `node scripts/delete-trigger.js --trigger-id <id>`
 
 For inbound_message triggers, prefer `kapso whatsapp numbers resolve --phone-number "<display-number>" --output json` to get the exact `phone_number_id`. Fall back to `node scripts/list-whatsapp-phone-numbers.js` when the CLI is unavailable.
+
+For project_event triggers, register or update the Project Event definition first when the user is defining an event type/schema:
+
+```bash
+node scripts/project-event-definitions.js create \
+  --name conversation.csat_scored \
+  --description "Customer satisfaction score for a conversation" \
+  --property-schema '{"score":{"type":"number"},"reason":{"type":"string"}}'
+```
+
+Then create the trigger:
+
+```bash
+node scripts/create-trigger.js <workflow_id> \
+  --trigger-type project_event \
+  --triggerable-attributes '{"event_name":"conversation.csat_scored","property_key":"score","operator":"gte","property_value":4}'
+```
+
+Definitions are metadata only. Do not emit a sample event just to register a name unless the user explicitly accepts that side effect.
+
+### Manage Project Event definitions
+
+Use definitions for event names, descriptions, and flat scalar property schemas. Emitted events are separate records created by `POST /platform/v1/events`, `emit_event` nodes, Function node `project_events`, or Agent node `emit_event`.
+
+1. List: `node scripts/project-event-definitions.js list`
+2. Create/update by name: `node scripts/project-event-definitions.js create --name <event.name> [--description <text>] [--property-schema <json>]`
+3. Update by ID: `node scripts/project-event-definitions.js update --definition-id <id> [--name <event.name>] [--description <text>] [--property-schema <json>]`
+
+### Build workflows with Project Events
+
+Use this checklist when a workflow needs to remember or react to durable business facts:
+
+1. Define the event first when the user is introducing a new event name or schema.
+2. Use `project_event` triggers when a workflow should react to an emitted event.
+3. Use an `emit_event` node for deterministic workflow-step emission.
+4. Use Function node `project_events` when emission depends on function code output.
+5. Use Agent node `emit_event` only when the agent should decide whether/when to record the fact. Enable the `emit_event` default tool and configure allowed event definitions before relying on it.
+
+Project-event-triggered workflows are observers and cannot emit Project Events. Do not add event emission to a workflow that starts from a Project Event trigger.
 
 ### Debug executions
 
@@ -214,6 +253,12 @@ Always use this structure:
 | `update-trigger.js` | Enable/disable a trigger |
 | `delete-trigger.js` | Delete a trigger |
 | `list-whatsapp-phone-numbers.js` | List phone numbers for trigger setup |
+
+### Project Events
+
+| Script | Purpose |
+|--------|---------|
+| `project-event-definitions.js` | List, create, or update Project Event definitions |
 
 ### Executions
 
