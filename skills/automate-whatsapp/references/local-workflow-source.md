@@ -60,7 +60,9 @@ export default workflow;
 
 Use `rawConfig` for advanced node configuration. Use slugs for local references when possible: `functionSlug` for functions and `workflowSlug` for called workflows.
 
-Project Event triggers and `emit_event` nodes are supported in the generated source files. Use this source shape when a workflow needs event triggers or event emission:
+Project Event triggers and `emit_event` nodes are supported in local source files. Use this source shape when a workflow needs event triggers or event emission.
+
+In `workflow.yaml`, add the trigger:
 
 ```yaml
 triggers:
@@ -72,19 +74,14 @@ triggers:
       property_value: 4
 ```
 
-```json
-{
-  "id": "record_score",
-  "type": "flow-node",
-  "position": { "x": 360, "y": 120 },
-  "data": {
-    "node_type": "emit_event",
-    "config": {
-      "event_name": "conversation.csat_scored",
-      "properties": { "score": "{{vars.score}}", "source": "workflow" }
-    }
-  }
-}
+In `workflow.js` or `workflow.ts`, add the node with `@kapso/workflows`:
+
+```ts
+workflow.addNode("record_score", {
+  type: "emit_event",
+  eventName: "conversation.csat_scored",
+  properties: { score: "{{vars.score}}", source: "workflow" },
+});
 ```
 
 ## Build and push
