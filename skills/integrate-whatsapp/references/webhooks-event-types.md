@@ -423,6 +423,7 @@ Use phone-number webhooks for `whatsapp.message.*` and `whatsapp.conversation.*`
 {
   "contact": {
     "id": "contact_123",
+    "customer_id": "customer_456",
     "wa_id": "15551234567",
     "profile_name": "John Doe",
     "display_name": "John Doe",
@@ -444,6 +445,9 @@ Use phone-number webhooks for `whatsapp.message.*` and `whatsapp.conversation.*`
 
 `contact` holds the identity after the change; `previous` holds the business-scoped user IDs Meta
 reported before it. Either `previous` value can be `null` when Meta does not send it.
+
+The contact carries `customer_id` instead of a nested `customer` object. It is `null` for sandbox
+contacts, which is the same condition reported by `sandbox: true`.
 
 ### Multiple inactivity timeouts
 
