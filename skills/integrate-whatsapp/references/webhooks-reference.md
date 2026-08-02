@@ -32,6 +32,10 @@ Conversation events:
 - `whatsapp.conversation.ended`
 - `whatsapp.conversation.inactive`
 
+Contact events:
+
+- `whatsapp.contact.identity_changed`
+
 Lifecycle events (project-level only):
 
 - `whatsapp.config.created`
